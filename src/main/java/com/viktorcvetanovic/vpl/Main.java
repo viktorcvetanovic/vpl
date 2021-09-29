@@ -8,10 +8,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String text = " var taske=car;if (taske==car){" +
-                "print('car');}";
+        String text = " viktor=car";
         Lexer lexer = new Lexer(text);
         List<Token> tokenList = lexer.lex();
+        System.out.println(tokenList);
 
     }
 }

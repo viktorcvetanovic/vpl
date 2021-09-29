@@ -13,7 +13,7 @@ public class StringIterator implements Iterator<String> {
     }
 
     public boolean hasNext() {
-        return i < text.length() - 1;
+    return i < text.length() - 1;
     }
 
     public String next() {
@@ -30,7 +30,7 @@ public class StringIterator implements Iterator<String> {
 
     public String eatWhile(Predicate<String> predicate) {
         StringBuilder stringBuilder = new StringBuilder();
-        while (predicate.test(text) && hasNext()) {
+        while (predicate.test(peek()) && hasNext()) {
             stringBuilder.append(next());
         }
         return stringBuilder.toString();

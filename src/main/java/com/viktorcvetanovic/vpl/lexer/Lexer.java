@@ -5,33 +5,68 @@ import com.viktorcvetanovic.vpl.lexer.iterrator.StringIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lexer {
-    private final StringIterator iter;
+public class Lexer extends StringIterator {
 
     public Lexer(String text) {
-        iter = new StringIterator(text);
+        super(text);
     }
 
     public List<Token> lex() {
         List<Token> tokens = new ArrayList<>();
-        while (iter.hasNext()) {
-            iter.eatWhiteSpace();
-            String val = iter.next();
-            Token token = readToken(val);
-            if (token != null) {
-                tokens.add(token);
-            }
+        while (hasNext()) {
+            eatWhiteSpace();
+            Token token = parseToken();
+            tokens.add(token);
+            next();
         }
         return tokens;
     }
 
-    private Token readToken(String value) {
-        switch (value) {
-            case "if":
-                return new Token(TokenType.IF);
-            default:
-                return null;
+    // viktor=5; if(viktor>5){}
+    private Token parseToken() {
+
+        if (isIdentifierOrExpression()) {
+            String ideOrExp = eatIdentifierOrExpression();
+            TokenType tokenType = getOrDefaultTokenType(ideOrExp, TokenType.IDENTIFIER);
+            return Token.createToken(tokenType, ideOrExp);
         }
+
+
+
+        return null;
     }
 
+
+    private boolean isIdentifierOrExpression() {
+        char[] chars = peek().toCharArray();
+        for (char c : chars) {
+            if (!Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String eatIdentifierOrExpression() {
+        return eatWhile(e -> isIdentifierOrExpression());
+    }
+
+
+    private Token createTokenFromParsedString(String parsed) {
+        switch (parsed) {
+            case "+":
+                return Token.createToken(TokenType.PLUS);
+
+        }
+        return null;
+    }
+
+
+    private TokenType getOrDefaultTokenType(String val, TokenType val1) {
+        try {
+            return TokenType.valueOf(val);
+        } catch (Exception ex) {
+            return val1;
+        }
+    }
 }
