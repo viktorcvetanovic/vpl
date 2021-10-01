@@ -63,7 +63,7 @@ public class Lexer extends StringIterator {
         next();
         String s = eatWhile(e -> !e.matches("\""));
         if (!hasNext() || !peek().equals("\"")) {
-            throw new RuntimeException("OVDE SAM PUKO"+i);
+            throw new RuntimeException("Can not lex this");
         }
         next();
         return s;
@@ -91,6 +91,10 @@ public class Lexer extends StringIterator {
             case "+":
                 return Token.createToken(TokenType.PLUS);
             case "=":
+                if (peek().equals("=")) {
+                    next();
+                    return Token.createToken(TokenType.EQ);
+                }
                 return Token.createToken(TokenType.ASS);
             case "*":
                 return Token.createToken(TokenType.MUL);
@@ -116,6 +120,10 @@ public class Lexer extends StringIterator {
                 return Token.createToken(TokenType.L_PAREN);
             case ")":
                 return Token.createToken(TokenType.R_PAREN);
+            case ".":
+                return Token.createToken(TokenType.DOT);
+            case ",":
+                return Token.createToken(TokenType.COMMA);
         }
         return null;
     }
@@ -123,7 +131,7 @@ public class Lexer extends StringIterator {
 
     private TokenType getOrDefaultTokenType(String val, TokenType val1) {
         try {
-            return TokenType.valueOf(val);
+            return TokenType.valueOf(val.toUpperCase());
         } catch (Exception ex) {
             return val1;
         }

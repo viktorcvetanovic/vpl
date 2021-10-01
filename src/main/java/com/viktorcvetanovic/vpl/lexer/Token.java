@@ -1,5 +1,7 @@
 package com.viktorcvetanovic.vpl.lexer;
 
+import java.util.Objects;
+
 public class Token {
     public TokenType tokenType;
     public Object value;
@@ -48,5 +50,18 @@ public class Token {
                 "tokenType=" + tokenType +
                 ", value='" + value + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return tokenType == token.tokenType && Objects.equals(value, token.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tokenType, value);
     }
 }

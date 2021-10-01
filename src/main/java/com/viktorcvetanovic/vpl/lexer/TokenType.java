@@ -36,6 +36,9 @@ public enum TokenType {
     FLO_LITERAL(null),
     NULL_LITERAL("null"),
     INT_LITERAL(null),
+    DOT("."),
+    RETURN ("return"),
+    COMMA(","),
     IDENTIFIER(null);
 
 
