@@ -17,46 +17,105 @@ public class Lexer extends StringIterator {
             eatWhiteSpace();
             Token token = parseToken();
             tokens.add(token);
-            next();
         }
         return tokens;
     }
 
-    // viktor=5; if(viktor>5){}
     private Token parseToken() {
 
-        if (isIdentifierOrExpression()) {
-            String ideOrExp = eatIdentifierOrExpression();
+        if (isStartOfIdeOrKw()) {
+            String ideOrExp = eatIdeOrKw();
             TokenType tokenType = getOrDefaultTokenType(ideOrExp, TokenType.IDENTIFIER);
             return Token.createToken(tokenType, ideOrExp);
         }
 
-
-
-        return null;
-    }
-
-
-    private boolean isIdentifierOrExpression() {
-        char[] chars = peek().toCharArray();
-        for (char c : chars) {
-            if (!Character.isLetter(c)) {
-                return false;
-            }
+        if (isStringLiteral()) {
+            String strLit = eatStringLiteral();
+            Token token = Token.createToken(TokenType.STR_LITERAL, strLit);
+            return token;
         }
-        return true;
+
+        if (isIntegerOrFloatLiteral()) {
+            Object number = eatIntegerOrFloat();
+            Token token = null;
+            if (number instanceof Integer) {
+                token = Token.createToken(TokenType.INT_LITERAL, number);
+            } else if (number instanceof Float) {
+                token = Token.createToken(TokenType.FLO_LITERAL, number);
+            }
+            return token;
+        }
+
+
+        return parseOperator();
     }
 
-    private String eatIdentifierOrExpression() {
-        return eatWhile(e -> isIdentifierOrExpression());
+    private Object eatIntegerOrFloat() {
+        String s = eatWhile(e -> e.matches("[0-9.]"));
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException ex) {
+            return Float.parseFloat(s);
+        }
+    }
+
+    private String eatStringLiteral() {
+        next();
+        String s = eatWhile(e -> !e.matches("\""));
+        if (!hasNext() || !peek().equals("\"")) {
+            throw new RuntimeException("OVDE SAM PUKO"+i);
+        }
+        next();
+        return s;
+    }
+
+    private boolean isStringLiteral() {
+        return peek().matches("\"");
+    }
+
+    private boolean isIntegerOrFloatLiteral() {
+        return peek().matches("[0-9]");
+    }
+
+    private boolean isStartOfIdeOrKw() {
+        return peek().matches("[a-zA-Z_]");
+    }
+
+    private String eatIdeOrKw() {
+        return eatWhile(e -> e.matches("[a-zA-Z_]"));
     }
 
 
-    private Token createTokenFromParsedString(String parsed) {
-        switch (parsed) {
+    private Token parseOperator() {
+        switch (next()) {
             case "+":
                 return Token.createToken(TokenType.PLUS);
-
+            case "=":
+                return Token.createToken(TokenType.ASS);
+            case "*":
+                return Token.createToken(TokenType.MUL);
+            case "/":
+                return Token.createToken(TokenType.DIV);
+            case ";":
+                return Token.createToken(TokenType.END);
+            case "-":
+                return Token.createToken(TokenType.MINUS);
+            case "%":
+                return Token.createToken(TokenType.MOD);
+            case "!":
+                return Token.createToken(TokenType.NOT);
+            case ">":
+                return Token.createToken(TokenType.GT);
+            case "<":
+                return Token.createToken(TokenType.LT);
+            case "}":
+                return Token.createToken(TokenType.R_BRACK);
+            case "{":
+                return Token.createToken(TokenType.L_BRACK);
+            case "(":
+                return Token.createToken(TokenType.L_PAREN);
+            case ")":
+                return Token.createToken(TokenType.R_PAREN);
         }
         return null;
     }

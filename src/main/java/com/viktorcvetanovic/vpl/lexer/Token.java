@@ -2,9 +2,9 @@ package com.viktorcvetanovic.vpl.lexer;
 
 public class Token {
     public TokenType tokenType;
-    public String value;
+    public Object value;
 
-    public Token(TokenType tokenType, String value) {
+    public Token(TokenType tokenType, Object value) {
         this.tokenType = tokenType;
         this.value = value;
     }
@@ -13,7 +13,7 @@ public class Token {
         this.tokenType = tokenType;
     }
 
-    public static Token createToken(TokenType tokenType, String value) {
+    public static Token createToken(TokenType tokenType, Object value) {
         return new Token(tokenType, value);
     }
 
@@ -34,7 +34,7 @@ public class Token {
         this.tokenType = tokenType;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
