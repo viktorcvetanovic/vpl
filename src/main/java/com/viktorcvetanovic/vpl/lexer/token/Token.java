@@ -1,4 +1,4 @@
-package com.viktorcvetanovic.vpl.lexer;
+package com.viktorcvetanovic.vpl.lexer.token;
 
 import java.util.Objects;
 

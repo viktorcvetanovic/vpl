@@ -1,9 +1,8 @@
 package com.viktorcvetanovic.vpl;
 
 import com.viktorcvetanovic.vpl.lexer.Lexer;
-import com.viktorcvetanovic.vpl.lexer.Token;
+import com.viktorcvetanovic.vpl.lexer.token.Token;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {

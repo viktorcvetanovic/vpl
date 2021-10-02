@@ -1,10 +1,11 @@
 package com.viktorcvetanovic.vpl.lexer;
 
 
+import com.viktorcvetanovic.vpl.lexer.token.Token;
+import com.viktorcvetanovic.vpl.lexer.token.TokenType;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LexerTest extends TestCase {

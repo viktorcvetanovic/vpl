@@ -1,6 +1,8 @@
 package com.viktorcvetanovic.vpl.lexer;
 
 import com.viktorcvetanovic.vpl.lexer.iterrator.StringIterator;
+import com.viktorcvetanovic.vpl.lexer.token.Token;
+import com.viktorcvetanovic.vpl.lexer.token.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,8 +111,16 @@ public class Lexer extends StringIterator {
             case "!":
                 return Token.createToken(TokenType.NOT);
             case ">":
+                if (peek().equals("=")) {
+                    next();
+                    return Token.createToken(TokenType.GE);
+                }
                 return Token.createToken(TokenType.GT);
             case "<":
+                if (peek().equals("=")) {
+                    next();
+                    return Token.createToken(TokenType.LE);
+                }
                 return Token.createToken(TokenType.LT);
             case "}":
                 return Token.createToken(TokenType.R_BRACK);
