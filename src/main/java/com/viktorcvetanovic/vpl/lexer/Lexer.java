@@ -1,6 +1,6 @@
 package com.viktorcvetanovic.vpl.lexer;
 
-import com.viktorcvetanovic.vpl.lexer.iterrator.StringIterator;
+import com.viktorcvetanovic.vpl.iterrator.StringIterator;
 import com.viktorcvetanovic.vpl.lexer.token.Token;
 import com.viktorcvetanovic.vpl.lexer.token.TokenType;
 

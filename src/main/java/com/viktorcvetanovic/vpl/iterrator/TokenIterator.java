@@ -1,4 +1,4 @@
-package com.viktorcvetanovic.vpl.lexer.iterrator;
+package com.viktorcvetanovic.vpl.iterrator;
 
 import com.viktorcvetanovic.vpl.lexer.token.Token;
 
