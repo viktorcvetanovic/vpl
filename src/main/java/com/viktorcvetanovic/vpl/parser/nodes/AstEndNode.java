@@ -2,15 +2,15 @@ package com.viktorcvetanovic.vpl.parser.nodes;
 
 import com.viktorcvetanovic.vpl.lexer.token.Token;
 
-public class AstLiteralNode extends AstNode{
+public class AstEndNode extends AstNode {
 
-    public AstLiteralNode(Token token) {
+    public AstEndNode(Token token) {
         super(token);
     }
 
     @Override
     public String toString() {
-        return "AstLiteralNode{" +
+        return "AstEndNode{" +
                 "token=" + token +
                 '}';
     }

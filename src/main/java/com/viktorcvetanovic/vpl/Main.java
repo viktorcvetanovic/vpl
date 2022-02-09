@@ -9,12 +9,13 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String text = "var b=5;";
+        String text = "var a=5;" +
+                "if(a==5){a=6}";
         Lexer lexer = new Lexer(text);
         List<Token> tokenList = lexer.lex();
-        tokenList.forEach(System.out::println);
+//        tokenList.forEach(System.out::println);
         Parser parser = new Parser(tokenList);
         TreeAstNode treeAstNode = parser.parse();
-
+        System.out.println(treeAstNode);
     }
 }
