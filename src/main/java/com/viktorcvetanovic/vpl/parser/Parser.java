@@ -57,16 +57,37 @@ public class Parser extends TokenIterator {
         }
         next();
         astIfNode.expression = node;
+
+        astIfNode.left = parseBlockNode();
+        if (isPeekOfType(TokenType.ELIF)) {
+            astIfNode.right=parseIf();
+        }else if(isPeekOfType(TokenType.ELSE)){
+            astIfNode.right=parseElseNode();
+        }
+        return astIfNode;
+    }
+
+
+    private AstNode parseElseNode(){
+        AstNode current = fromToken(next());
+        AstElseNode astElseNode = (AstElseNode) current;
+        astElseNode.block=parseBlockNode();
+        return astElseNode;
+    }
+
+    private AstBlockNode parseBlockNode() {
         if (peek().tokenType != TokenType.L_BRACK) {
             throw new VPLInvalidSyntax("Expected token L_BRACK");
         }
-        next();
-        astIfNode.left = parseStatement();
+        AstBlockNode astBlockNode = (AstBlockNode) fromToken(next());
+        while (peek().tokenType != TokenType.R_BRACK) {
+            astBlockNode.list.add(parseExpression());
+        }
         if (peek().tokenType != TokenType.R_BRACK) {
             throw new VPLInvalidSyntax("Expected token R_BRACK");
         }
         next();
-        return astIfNode;
+        return astBlockNode;
     }
 
     private AstNode parseVar() {
@@ -77,9 +98,7 @@ public class Parser extends TokenIterator {
         AstVarNode astVarNode = (AstVarNode) current;
         astVarNode.astIdentifierNode = (AstIdentifierNode) fromToken(next());
         AstNode astAssignmentNode = parseAssignment(astVarNode);
-//        if (peek().tokenType != TokenType.END) {
-//            throw new VPLInvalidSyntax("Expected token END " + peek());
-//        }
+
         return astAssignmentNode;
     }
 
@@ -90,18 +109,13 @@ public class Parser extends TokenIterator {
             node = parseEqual(current);
         } else if (isPeekOfType(TokenType.ASS)) {
             node = parseAssignment(current);
-        } else if (isPeekOfType(TokenType.STR_LITERAL, TokenType.INT_LITERAL, TokenType.FLO_LITERAL)) {
-            node = parseLiteral(current);
-        } else {
+        }  else {
             return current;
         }
 
         return node;
     }
 
-    private AstNode parseLiteral(AstNode current) {
-        return null;
-    }
 
     //----------------------------------------------------------------------//
 
@@ -112,7 +126,10 @@ public class Parser extends TokenIterator {
         }
         astAssignmentNode.left = current;
         astAssignmentNode.right = parseExpression();
-
+        if (peek().tokenType != TokenType.END) {
+            throw new VPLInvalidSyntax("Expected token END " + peek());
+        }
+        next();
         return astAssignmentNode;
     }
 
@@ -134,6 +151,7 @@ public class Parser extends TokenIterator {
             case VAR:
                 return new AstVarNode(t);
             case IF:
+            case ELIF:
                 return new AstIfNode(t);
             case STR_LITERAL:
             case FLO_LITERAL:
@@ -141,7 +159,7 @@ public class Parser extends TokenIterator {
             case INT_LITERAL:
                 return new AstLiteralNode(t);
             case ELSE:
-            case ELIF:
+                return new AstElseNode(t);
             case FOR:
             case WHILE:
             case BREAK:
@@ -160,6 +178,7 @@ public class Parser extends TokenIterator {
             case AND:
             case OR:
             case L_BRACK:
+                return new AstBlockNode(t);
             case R_BRACK:
             case L_PAREN:
             case R_PAREN:

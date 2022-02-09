@@ -30,6 +30,18 @@ public class ParserTest {
         assertEquals(TokenType.IDENTIFIER,astVarNode.astIdentifierNode.token.tokenType);
         assertEquals(TokenType.INT_LITERAL,astLiteralNode.token.tokenType);
         assertEquals(5,astLiteralNode.token.value);
-        assertEquals(TokenType.END,treeAstNode.getRoot().get(1).token.tokenType);
+        System.out.println(treeAstNode);
     }
+
+    @Test
+    public void test_parser_if(){
+        String s="var a=5;if(a==4){a=3;}elif(a==3){}else{}";
+        Lexer lexer = new Lexer(s);
+        List<Token> tokenList = lexer.lex();
+        Parser parser = new Parser(tokenList);
+        TreeAstNode treeAstNode = parser.parse();
+        System.out.println(treeAstNode);
+    }
+
+
 }
